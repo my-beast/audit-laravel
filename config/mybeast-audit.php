@@ -1,0 +1,50 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * MyBeast audit: this app's audit events, kept in one tamper-evident log at audit.my-beast.com. Audit::record(…)
+ * writes an event to the outbox table in your own database transaction - no action without its record - and
+ * `php artisan audit:ship` (every minute, by the scheduler) sends the outbox in order and forgets what the service
+ * confirmed. The URL and the secret come from the project's page there (Overview → Connect a host).
+ *
+ * Without the URL or the secret, events still wait in the outbox: nothing is lost while the .env is incomplete.
+ */
+return [
+    // false: Audit::record() checks the event and writes nothing (tests that do not fake it, a checkout without audit).
+    'enabled' => (bool) env('MYBEAST_AUDIT_ENABLED', true),
+
+    // The service, e.g. https://audit.my-beast.com (no trailing slash needed).
+    'url' => env('MYBEAST_AUDIT_URL'),
+
+    // sk_….…: this server's secret for the service. Keep it on the server only.
+    'secret' => env('MYBEAST_AUDIT_SECRET'),
+
+    'outbox' => [
+        // The connection of the actions you audit (null: the default one) - the outbox row joins their transaction
+        // only on the same connection.
+        'connection' => env('MYBEAST_AUDIT_CONNECTION'),
+
+        // The outbox table. Rename it to your own rule (Asuvaan: core_audit_outbox) before the first migrate.
+        'table' => env('MYBEAST_AUDIT_OUTBOX_TABLE', 'audit_outbox'),
+
+        // true: the SDK's migration runs with yours. false: publish it (vendor:publish --tag=mybeast-audit-migrations).
+        'migrations' => true,
+    ],
+
+    'ship' => [
+        // true: audit:ship runs every minute on one server (the scheduler must run: schedule:work or cron).
+        'schedule' => true,
+
+        // Events in one request (the service takes at most 500), and requests in one run.
+        'batch' => 500,
+        'max_batches' => 20,
+
+        // Seconds to wait for the service.
+        'timeout' => 10,
+
+        // An event is sent once it is this many seconds old, so a transaction that committed later with a lower id is
+        // not overtaken by one that committed first.
+        'settle_seconds' => 2,
+    ],
+];

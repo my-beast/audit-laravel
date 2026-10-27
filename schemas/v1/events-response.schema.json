@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://audit.my-beast.com/schemas/v1/events-response.schema.json",
+  "title": "The answer to a batch (200 from POST /v1/events)",
+  "description": "One result per event, in the batch's order. kept and duplicate are both safely here: the sender may forget them. refused never will be.",
+  "type": "object",
+  "required": ["kept", "duplicates", "refused", "results"],
+  "properties": {
+    "kept": { "type": "integer", "minimum": 0 },
+    "duplicates": { "type": "integer", "minimum": 0 },
+    "refused": { "type": "integer", "minimum": 0 },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["index", "event_id", "status"],
+        "properties": {
+          "index": { "type": "integer", "minimum": 0 },
+          "event_id": { "type": ["string", "null"] },
+          "status": { "enum": ["kept", "duplicate", "refused"] },
+          "seq": { "type": "integer", "minimum": 1 },
+          "reason": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "events": [
+    {
+      "event_id": "01a17d00-0000-7000-8000-000000000001",
+      "occurred_at": "2026-10-27T09:15:02.120Z",
+      "action": "customer.viewed",
+      "actor": { "type": "operator", "id": "01a17cf6-44a6-7345-bc45-000000000007" },
+      "target": { "type": "customer", "id": "4512" },
+      "subject": "u_88231",
+      "account": "ws_301",
+      "reason": "Support ticket 7781: the tenant asked why their rent went up.",
+      "context": { "fields": ["iban", "address"], "via": "console" }
+    },
+    {
+      "event_id": "01a17d00-0000-7000-8000-000000000002",
+      "occurred_at": "2026-10-27T09:15:40.004+03:00",
+      "action": "identity-code.viewed",
+      "actor": { "type": "person", "id": "u_1001" },
+      "target": { "type": "person", "id": "u_88231" },
+      "account": "ws_301"
+    },
+    {
+      "event_id": "01a17d00-0000-7000-8000-000000000003",
+      "occurred_at": "2026-10-27T09:16:00Z",
+      "action": "key.revealed",
+      "actor": { "type": "system", "id": "scheduler" },
+      "target": null,
+      "subject": null,
+      "account": null,
+      "reason": null,
+      "context": null
+    }
+  ]
+}
