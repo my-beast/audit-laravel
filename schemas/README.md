@@ -1,12 +1,12 @@
 # Schemas: the contract between the SDK and the service
 
-`v1/` is what a host sends and what it gets back. The service (`audit/service/schemas`) holds the original; the Laravel
-SDK (`audit/laravel/schemas`) holds a copy, and its `SchemaCopyTest` fails when the copy differs. Change a schema only
-together with the SDK, and copy the whole folder.
+`v1/` is what a host sends and what it gets back. The Audit module of services (`services/schemas/audit`) holds the
+original; the Laravel SDK (`audit/laravel/schemas`) holds a copy, and its `SchemaCopyTest` fails when the copy differs.
+Change a schema only together with the SDK, and copy the whole folder.
 
 | File | What |
 |---|---|
-| `v1/events.schema.json` | `POST /v1/events`: a batch of 1-500 events |
+| `v1/events.schema.json` | `POST /audit/v1/events` (below `MYBEAST_AUDIT_URL`): a batch of 1-500 events |
 | `v1/events-response.schema.json` | Its `200` answer: one result per event, in order |
 | `v1/fixtures/events.json` | A valid batch: both test suites send or check it |
 

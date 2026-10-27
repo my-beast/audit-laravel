@@ -14,7 +14,7 @@ final class ShipCommand extends Command
         {--status : Only say what waits in the outbox, and what the service refused}
         {--retry-refused : Put the refused events back in line (after fixing what the service said), then send}';
 
-    protected $description = 'Send the audit outbox to audit.my-beast.com, in order, and forget what the service confirmed';
+    protected $description = 'Send the audit outbox to services.my-beast.com/audit, in order, and forget what the service confirmed';
 
     public function handle(Shipper $shipper, Outbox $outbox): int
     {

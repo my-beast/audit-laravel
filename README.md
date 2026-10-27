@@ -1,6 +1,7 @@
 # mybeast/audit-laravel
 
-The Laravel SDK of MyBeast audit (audit.my-beast.com): your app's audit events, kept in one tamper-evident log.
+The Laravel SDK of MyBeast audit (services.my-beast.com/audit): your app's audit events, kept in one tamper-evident
+log.
 PHP ≥ 8.2, Laravel 11-13.
 
 **No action without its record.** `Audit::record()` writes the event to an outbox table in your own database, in the
@@ -17,7 +18,7 @@ php artisan migrate            # the outbox table (audit_outbox; rename it in co
 ```
 
 ```dotenv
-MYBEAST_AUDIT_URL=https://audit.my-beast.com
+MYBEAST_AUDIT_URL=https://services.my-beast.com/audit
 MYBEAST_AUDIT_SECRET=sk_….…    # the project's page there: Settings → Keys → Make server secret (shown once)
 ```
 
@@ -89,8 +90,8 @@ $audit->assertNothingRecorded();
 
 ## The contract
 
-`schemas/` is a copy of the service's (`audit/service/schemas`): `v1/events.schema.json` is what the outbox holds and
-sends. `SchemaCopyTest` fails when the copy differs; change both together.
+`schemas/` is a copy of the Audit module's in services (`../../services/schemas/audit`): `v1/events.schema.json` is what
+the outbox holds and sends. `SchemaCopyTest` fails when the copy differs; change both together.
 
 ```bash
 composer test           # PHPUnit (Orchestra Testbench)
