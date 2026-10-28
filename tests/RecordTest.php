@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace MyBeast\Audit\Laravel\Tests;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use JsonSchema\Validator;
 use MyBeast\Audit\Laravel\Events\Actor;
 use MyBeast\Audit\Laravel\Events\InvalidAuditEvent;
@@ -117,5 +119,36 @@ final class RecordTest extends TestCase
         $this->assertCount(1, $this->outbox());
         $this->artisan('audit:ship')->expectsOutputToContain('Not sending')->assertSuccessful();
         $this->assertCount(1, $this->outbox());
+    }
+
+    public function test_an_event_carries_the_id_of_the_request_it_was_recorded_in(): void
+    {
+        Route::get('/customers/{id}', fn (string $id): string => Audit::record('customer.viewed', Actor::operator(1), Target::of('customer', $id)));
+        $requestOf = fn (int $index): ?string => json_decode($this->outbox()[$index]->payload, true)['request_id'] ?? null;
+
+        // A proxy's X-Request-Id.
+        $this->get('/customers/1', ['X-Request-Id' => '01JBX4Q2M8T0F3V6R9C2D5H7KA'])->assertOk();
+        $this->assertSame('01JBX4Q2M8T0F3V6R9C2D5H7KA', $requestOf(0));
+
+        // mybeast/logs-laravel's, when it runs: the id on the request's log lines (a job queued by it gets it too).
+        Context::addHidden('mybeast_logs_request_id', 'logs-01JBX4Q2');
+        $this->get('/customers/2', ['X-Request-Id' => 'from-the-proxy'])->assertOk();
+        $this->assertSame('logs-01JBX4Q2', $requestOf(1));
+        Context::forgetHidden('mybeast_logs_request_id');
+
+        // One that does not fit the contract is left off; the event still goes.
+        $this->get('/customers/3', ['X-Request-Id' => 'has spaces in it'])->assertOk();
+        $this->assertNull($requestOf(2));
+
+        // Named by the host itself.
+        Audit::record('customer.viewed', Actor::operator(1), request: 'req-42');
+        $this->assertSame('req-42', $requestOf(3));
+
+        // No header read when the config says none, and none outside a request.
+        config(['mybeast-audit.request_id_header' => '']);
+        $this->get('/customers/4', ['X-Request-Id' => 'from-the-proxy'])->assertOk();
+        Audit::record('job.ran', Actor::system('scheduler'));
+        $this->assertNull($requestOf(4));
+        $this->assertNull($requestOf(5));
     }
 }

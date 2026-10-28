@@ -20,6 +20,10 @@ return [
     // sk_….…: this server's secret for the service. Keep it on the server only.
     'secret' => env('MYBEAST_AUDIT_SECRET'),
 
+    // Each event carries the id of the request it was recorded in, so its page at the service opens that request's
+    // log lines and errors: mybeast/logs-laravel's id when it runs, else this request header's ('' reads none).
+    'request_id_header' => env('MYBEAST_AUDIT_REQUEST_ID_HEADER', 'X-Request-Id'),
+
     'outbox' => [
         // The connection of the actions you audit (null: the default one) - the outbox row joins their transaction
         // only on the same connection.

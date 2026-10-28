@@ -54,6 +54,10 @@ DB::transaction(function () use ($customer, $operator, $reason) {
 - A wrong event throws at once, in your transaction - the mistake is seen where it is made.
 - The outbox row joins your transaction only on the same connection: set `MYBEAST_AUDIT_CONNECTION` if your actions run
   on another one than the default.
+- **Each event carries the id of the request it was recorded in**, so its page at the service opens that request's log
+  lines in Logs and its errors in Errors: `mybeast/logs-laravel`'s id when it runs (a job carries the id of the request
+  that queued it), else the request's `X-Request-Id` header (`MYBEAST_AUDIT_REQUEST_ID_HEADER`, empty for none).
+  `request:` names one yourself. Neither SDK needs the other.
 
 ## Ship
 

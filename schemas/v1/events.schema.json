@@ -68,6 +68,10 @@
           "description": "The account (a workspace, an organisation) it happened in.",
           "oneOf": [{ "$ref": "#/definitions/id" }, { "type": "null" }]
         },
+        "request_id": {
+          "description": "The host's request it was recorded in, as its log lines carry it (X-Request-Id): the request's lines in Logs, its errors in Errors. A job carries the id of the request that queued it.",
+          "oneOf": [{ "$ref": "#/definitions/id" }, { "type": "null" }]
+        },
         "reason": {
           "description": "The operator's reason, when the host asked for one.",
           "type": ["string", "null"],

@@ -11,6 +11,7 @@ use MyBeast\Audit\Laravel\Events\EventBuilder;
 use MyBeast\Audit\Laravel\Events\InvalidAuditEvent;
 use MyBeast\Audit\Laravel\Events\Target;
 use MyBeast\Audit\Laravel\Outbox\Outbox;
+use MyBeast\Audit\Laravel\Support\RequestIds;
 use MyBeast\Audit\Laravel\Testing\AuditFake;
 use MyBeast\Audit\Laravel\Transport\Shipper;
 use MyBeast\Audit\Laravel\Transport\ShipReport;
@@ -25,7 +26,8 @@ use MyBeast\Audit\Laravel\Transport\ShipReport;
  *     });
  *
  * The event joins the outbox in the same transaction: if the action rolls back, so does its record; if it commits,
- * the record is there to ship, whatever the service is doing.
+ * the record is there to ship, whatever the service is doing. It carries the id of the request it was recorded in
+ * (Support\RequestIds), so its page at the service opens that request's log lines.
  */
 final readonly class Audit
 {
@@ -37,6 +39,7 @@ final readonly class Audit
      * @param  array<string, mixed>  $context  ids and short facts, never names or e-mails
      * @param  string|int|null  $subject  the person the data is about (their access report)
      * @param  string|null  $reason  the operator's reason, when you asked one (an e-mail address in it is taken out)
+     * @param  string|null  $request  the request's id, when not the one this request has (mybeast/logs-laravel's, or X-Request-Id)
      * @return string the event's id
      *
      * @throws InvalidAuditEvent
@@ -50,8 +53,10 @@ final readonly class Audit
         string|int|null $account = null,
         ?string $reason = null,
         ?DateTimeInterface $at = null,
+        ?string $request = null,
     ): string {
-        $event = EventBuilder::build($action, $actor, $target, $context, $subject, $account, $reason, $at);
+        $event = EventBuilder::build($action, $actor, $target, $context, $subject, $account, $reason, $at,
+            $request ?? $this->app->make(RequestIds::class)->current());
         $this->app->make(Recorder::class)->put($event);
 
         return $event['event_id'];

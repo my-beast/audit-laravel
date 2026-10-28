@@ -20,7 +20,8 @@ Content-Encoding: gzip                  optional
 ```
 
 An event: `{event_id, occurred_at, action, actor: {type: person|operator|system, id}, target: {type, id}?, subject?,
-account?, reason?, context?}`. **Ids only, never names or e-mails**: an e-mail address in an id, the reason or the
+account?, request_id?, reason?, context?}`. `request_id` is the host's request it was recorded in, the id its log lines
+carry (`X-Request-Id`): the event's page links that request's lines in Logs and its errors in Errors. **Ids only, never names or e-mails**: an e-mail address in an id, the reason or the
 context refuses the event. Who an id is, the host's own console says (the project's link templates).
 
 | Answer | Means | The sender |

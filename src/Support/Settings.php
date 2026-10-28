@@ -46,6 +46,14 @@ final readonly class Settings
         return $this->enabled() && $this->url() !== null && $this->secret() !== null;
     }
 
+    /** The header a request's id comes in when no mybeast/logs-laravel gave one; null: read none. */
+    public function requestIdHeader(): ?string
+    {
+        $header = trim((string) ($this->config['request_id_header'] ?? 'X-Request-Id'));
+
+        return preg_match('/^[A-Za-z0-9-]{1,64}$/', $header) === 1 ? $header : null;
+    }
+
     public function connection(): ?string
     {
         $connection = $this->outbox('connection');

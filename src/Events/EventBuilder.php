@@ -40,6 +40,7 @@ final class EventBuilder
         string|int|null $account,
         ?string $reason,
         ?DateTimeInterface $at,
+        ?string $requestId = null,
     ): array {
         if (strlen($action) > 80 || preg_match(self::ACTION, $action) !== 1) {
             throw new InvalidAuditEvent("The action \"{$action}\" must be lower-case letters and digits joined by . _ or - (at most 80), e.g. customer.viewed.");
@@ -57,6 +58,8 @@ final class EventBuilder
             'target' => $target === null ? null : ['type' => $target->type, 'id' => self::id($target->id, 'target')],
             'subject' => $subject === null ? null : self::id((string) $subject, 'subject'),
             'account' => $account === null ? null : self::id((string) $account, 'account'),
+            // Not the host's own words: one that does not fit is left off, as the log lines leave it.
+            'request_id' => $requestId !== null && preg_match(self::ID, $requestId) === 1 ? $requestId : null,
             'reason' => self::reason($reason),
             'context' => self::context($context),
         ], fn (mixed $value): bool => $value !== null);

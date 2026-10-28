@@ -8,6 +8,7 @@
       "target": { "type": "customer", "id": "4512" },
       "subject": "u_88231",
       "account": "ws_301",
+      "request_id": "01JBX4Q2M8T0F3V6R9C2D5H7KA",
       "reason": "Support ticket 7781: the tenant asked why their rent went up.",
       "context": { "fields": ["iban", "address"], "via": "console" }
     },
@@ -27,6 +28,7 @@
       "target": null,
       "subject": null,
       "account": null,
+      "request_id": null,
       "reason": null,
       "context": null
     }
