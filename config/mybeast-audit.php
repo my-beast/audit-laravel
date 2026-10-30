@@ -30,7 +30,7 @@ return [
         // only on the same connection.
         'connection' => env('MYBEAST_AUDIT_CONNECTION'),
 
-        // The outbox table. Rename it to your own rule (Asuvaan: core_audit_outbox) before the first migrate.
+        // The outbox table. Rename it to your own rule (core_audit_outbox, say) before the first migrate.
         'table' => env('MYBEAST_AUDIT_OUTBOX_TABLE', 'audit_outbox'),
 
         // true: the SDK's migration runs with yours. false: publish it (vendor:publish --tag=mybeast-audit-migrations).

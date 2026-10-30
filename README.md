@@ -2,7 +2,7 @@
 
 The Laravel SDK of MyBeast audit (services.my-beast.com/audit): your app's audit events, kept in one tamper-evident
 log.
-PHP ≥ 8.2, Laravel 11-13.
+PHP ≥ 8.2, Laravel 12 and 13.
 
 **No action without its record.** `Audit::record()` writes the event to an outbox table in your own database, in the
 same transaction as the action it records: if the action rolls back, so does its record; if it commits, the record is
@@ -101,3 +101,9 @@ the outbox holds and sends. `SchemaCopyTest` fails when the copy differs; change
 composer test           # PHPUnit (Orchestra Testbench)
 ./vendor/bin/pint       # format
 ```
+
+## Releasing
+
+Add the version to `CHANGELOG.md`, then tag it: `git tag v0.2.0 && git push --tags`. Packagist reads the tag through
+its GitHub hook; there is no version in `composer.json`. The Tests workflow runs on the tag as on every push: PHP 8.2
+to 8.4 against Laravel 12 and 13 (Laravel 11 has unfixed advisories, so Composer will not install it).
