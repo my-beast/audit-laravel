@@ -1,6 +1,6 @@
 {
     "name": "mybeast/audit-laravel",
-    "description": "Laravel SDK for MyBeast Audit (services.my-beast.com/audit): audit events written in your own transaction to an outbox, and shipped in order to one tamper-evident log.",
+    "description": "Laravel SDK for My Beast Audit (services.my-beast.com/audit): audit events written in your own transaction to an outbox, and shipped in order to one tamper-evident log.",
     "type": "library",
     "license": "MIT",
     "keywords": ["mybeast", "laravel", "audit", "audit-log", "outbox"],
@@ -10,7 +10,7 @@
         "source": "https://github.com/my-beast/audit-laravel"
     },
     "authors": [
-        { "name": "MyBeast", "homepage": "https://my-beast.com" }
+        { "name": "My Beast", "homepage": "https://my-beast.com" }
     ],
     "require": {
         "php": "^8.2",

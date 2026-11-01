@@ -147,7 +147,7 @@ final readonly class Shipper
     {
         $this->outbox->refuse($row->id, $reason);
 
-        Log::error('MyBeast audit: the service refused an audit event; it is kept aside in the outbox (audit:ship --status)', [
+        Log::error('My Beast audit: the service refused an audit event; it is kept aside in the outbox (audit:ship --status)', [
             'event_id' => $row->eventId,
             'action' => json_decode($row->payload, true)['action'] ?? null,
             'reason' => $reason,
@@ -158,7 +158,7 @@ final readonly class Shipper
     private function stop(array $rows, string $why, int $kept, int $duplicates, int $refused): ShipReport
     {
         $this->outbox->tried(array_map(fn (OutboxRow $row): int => $row->id, $rows), $why);
-        Log::warning('MyBeast audit: events wait in the outbox', ['reason' => $why]);
+        Log::warning('My Beast audit: events wait in the outbox', ['reason' => $why]);
 
         return new ShipReport($kept, $duplicates, $refused, stopped: $why);
     }

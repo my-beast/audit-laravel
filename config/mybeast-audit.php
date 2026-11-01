@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * MyBeast audit: this app's audit events, kept in one tamper-evident log at services.my-beast.com/audit.
+ * My Beast audit: this app's audit events, kept in one tamper-evident log at services.my-beast.com/audit.
  * Audit::record(…) writes an event to the outbox table in your own database transaction - no action without its
  * record - and `php artisan audit:ship` (every minute, by the scheduler) sends the outbox in order and forgets what
  * the service confirmed. The URL and the secret come from the project's page there (its setup guide: the Overview

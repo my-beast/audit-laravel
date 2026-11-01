@@ -14,7 +14,7 @@ use MyBeast\Audit\Laravel\Transport\ServiceClient;
 use MyBeast\Audit\Laravel\Transport\Shipper;
 
 /**
- * Plugs MyBeast audit in: the config, the outbox's migration, Audit::record() into the outbox, and audit:ship every
+ * Plugs My Beast audit in: the config, the outbox's migration, Audit::record() into the outbox, and audit:ship every
  * minute on one server (the outbox is in the shared database, so one shipper is enough - and two would race).
  */
 final class AuditServiceProvider extends ServiceProvider

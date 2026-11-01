@@ -7,7 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * MyBeast audit's outbox (mybeast/audit-laravel): each event Audit::record() wrote, in the transaction of the action
+ * My Beast audit's outbox (mybeast/audit-laravel): each event Audit::record() wrote, in the transaction of the action
  * it records, until audit:ship has it confirmed by the service - then the row goes. `payload` is the event exactly as
  * it is sent (schemas/v1/events.schema.json); `id` is the order it is sent in. A row the service refused stays, with
  * the reason, for a person to look at (`audit:ship --status`, `--retry-refused`).

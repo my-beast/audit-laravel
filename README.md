@@ -1,6 +1,6 @@
 # mybeast/audit-laravel
 
-The Laravel SDK of MyBeast audit (services.my-beast.com/audit): your app's audit events, kept in one tamper-evident
+The Laravel SDK of My Beast audit (services.my-beast.com/audit): your app's audit events, kept in one tamper-evident
 log.
 PHP ≥ 8.2, Laravel 12 and 13.
 
