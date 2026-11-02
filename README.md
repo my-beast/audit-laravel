@@ -19,8 +19,16 @@ php artisan migrate            # the outbox table (audit_outbox; rename it in co
 
 ```dotenv
 MYBEAST_AUDIT_URL=https://services.my-beast.com/audit
-MYBEAST_AUDIT_SECRET=sk_….…    # the project's page there: Settings → Keys → Make server secret (shown once)
+MYBEAST_AUDIT_SECRET=sk_….…
 ```
+
+**Where the values come from.** id makes the server secret with the project, and Secrets keeps both lines, filled in,
+in each of the project's environments: Secrets → the environment → Download .env is the whole block, with the other
+products' lines. A secret made by hand is on the project's **Settings → Keys**
+(`services.my-beast.com/<workspace>/<project>/settings/keys`), shown once, when made.
+
+Audit keeps one log for the project, with no environments: every app with this secret writes into it. A copy that
+should not - a developer's checkout, say - sets `MYBEAST_AUDIT_ENABLED=false`.
 
 The scheduler must run (`schedule:work`, or cron with `schedule:run`): the SDK adds `audit:ship` every minute,
 `onOneServer()` - the outbox is in your shared database, so one shipper is enough. Without the URL or the secret,
@@ -77,7 +85,7 @@ php artisan audit:ship --retry-refused   # refused events back in line, after fi
 An event is sent once it is `ship.settle_seconds` old (2): a transaction that committed late with a lower id is not
 overtaken by one that committed first.
 
-## Test
+## In your tests
 
 ```php
 $audit = Audit::fake();             // in memory: nothing written, nothing sent; a wrong event still throws
@@ -92,7 +100,12 @@ $audit->assertNothingRecorded();
 
 `MYBEAST_AUDIT_ENABLED=false` checks events and writes nothing (a checkout without audit).
 
-## The contract
+## Working on this SDK
+
+For whoever changes the SDK, in its repository: the Composer download leaves the tests out, and the schema check needs
+My Beast's own checkout beside it.
+
+### The contract
 
 `schemas/` is a copy of the Audit module's in services (`../../services/schemas/audit`): `v1/events.schema.json` is what
 the outbox holds and sends. `SchemaCopyTest` fails when the copy differs; change both together.
@@ -102,7 +115,7 @@ composer test           # PHPUnit (Orchestra Testbench)
 ./vendor/bin/pint       # format
 ```
 
-## Releasing
+### Releasing
 
 Add the version to `CHANGELOG.md`, then tag it: `git tag v0.2.0 && git push --tags`. Packagist reads the tag through
 its GitHub hook; there is no version in `composer.json`. The Tests workflow runs on the tag as on every push: PHP 8.2
